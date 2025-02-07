@@ -157,7 +157,6 @@ export default function Index() {
       setHints([]);
 
       // Send the current FEN position to Stockfish
-
       if (stockfish) {
         stockfish.postMessage(`position fen ${chess.fen()}`);
         stockfish.postMessage("go depth 15"); // Set depth for Stockfish analysis
@@ -168,7 +167,17 @@ export default function Index() {
             event.data,
             chess.turn()
           );
-          if (bestMove) setBestMove(bestMove);
+          if (bestMove) {
+            setBestMove(bestMove);
+            setTimeout(() => {
+              chess.move({
+                from: bestMove.substring(0, 2),
+                to: bestMove.substring(2, 4),
+              });
+              setBoard(chess.board());
+            }, 1000);
+          }
+
           if (evaluation) setEvaluation(evaluation);
         };
       }
@@ -183,7 +192,7 @@ export default function Index() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-2">
+    <div className="flex flex-col justify-center items-center gap-2 p-2">
       <div className="flex gap-2 justify-between items-center">
         <div className="h-[640px] w-[20px] bg-[#5b5957] relative overflow-hidden">
           <div
@@ -264,13 +273,29 @@ export default function Index() {
         </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Best Move: {bestMove || "-"}</CardTitle>
-          <CardDescription>Evaluation: {evaluation || "-"}</CardDescription>
-        </CardHeader>
-      </Card>
+      <div className="flex justify-between gap-2 items-center w-[600px]">
+        <Card>
+          <CardHeader>
+            <CardTitle>Best Move: {bestMove || "-"}</CardTitle>
+            <CardDescription>Evaluation: {evaluation || "-"}</CardDescription>
+          </CardHeader>
+        </Card>
 
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <span
+                className={cn(
+                  "inline-block w-[20px] h-[20px]",
+                  chess.turn() === "w" ? "bg-[#f9f9f9]" : " bg-[#5b5957]"
+                )}
+              ></span>{" "}
+              <span>{chess.turn() === "w" ? "White" : "Black"} to Move</span>
+            </CardTitle>
+            {/* <CardDescription>Evaluation: {evaluation || "-"}</CardDescription> */}
+          </CardHeader>
+        </Card>
+      </div>
       {/* <Button
         onClick={() => {
           chess.move("e2e4");
