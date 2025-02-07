@@ -1,6 +1,6 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "default",
+  "style": "new-york",
   "rsc": false,
   "tsx": true,
   "tailwind": {
@@ -8,7 +8,7 @@
     "css": "app/tailwind.css",
     "baseColor": "gray",
     "cssVariables": true,
-    "prefix": "locdt2"
+    "prefix": ""
   },
   "aliases": {
     "components": "~/components",
